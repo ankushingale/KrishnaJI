@@ -1,5 +1,4 @@
-// src/QuestionPage.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 const QUESTION_BANK = [
   // Geography
@@ -145,20 +144,16 @@ const KRISHNA_QUOTES = [
   "From attraction arises desire, the lust of possession, and this leads to passion, to anger.",
   "The power of God is with you at all times; through the activities of mind, senses, breathing, and emotions; and is constantly doing all the work using you as a mere instrument.",
   "The senses are so strong and impetuous that they forcibly carry away the mind even of a man of discrimination who is endeavoring to control them.",
-  "When you feel the suffering of every living thing in your own heart, that is consciousness.",
   "One who sees inaction in action, and action in inaction, is intelligent among men.",
   "The self-controlled soul, who moves amongst sense objects, free from either attachment or repulsion, he wins eternal peace.",
-  "Hell has three gates: lust, anger, and greed.",
   "A gift is pure when it is given from the heart to the right person at the right time and at the right place, and when we expect nothing in return.",
   "Those who are motivated only by desire for the fruits of action are miserable, for they are constantly anxious about the results of what they do.",
-  "Man is made by his belief. As he believes, so he is.",
   "Why do you worry unnecessarily? Whom do you fear? Who can kill you? The soul is neither born nor dies.",
   "Live a well-balanced life, it will bring peace.",
   "Action should be undertaken as a means of purification, of the body, mind, and intellect.",
   "That which seems like poison at first, but tastes like nectar in the end, is the second kind of happiness.",
   "The only way you can conquer me is through love, and there I am gladly conquered.",
   "The soul can never be cut to pieces by any weapon, nor burned by fire, nor moistened by water, nor withered by the wind.",
-  "The happiness which comes from long practice, which leads to the end of suffering, which at first is like poison, but at last like nectar - this is the happiness which arises from the serenity of one's own mind.",
   "I am the beginning, middle, and end of creation.",
   "Among all kinds of killers, time is the ultimate because time kills everything.",
   "To the illumined man or woman, a clod of dirt, a stone, and gold are the same.",
@@ -168,21 +163,12 @@ const KRISHNA_QUOTES = [
   "Even if you were the most sinful of all sinners, you could cross over all sin by the raft of spiritual wisdom.",
   "As the blazing fire reduces wood to ashes, similarly, the fire of Self-knowledge reduces all Karma to ashes.",
   "There is nothing more purifying than knowledge in this world.",
-  "The one who is motivated by the desire for the fruits of action is miserable.",
   "You are what you believe in. You become that which you believe you can become.",
   "Sever the ignorant doubt in your heart with the sword of self-knowledge. Observe your discipline. Arise.",
   "Be steadfast in the performance of your duty, abandoning attachment to success and failure.",
-  "The meaning of Karma is in the intention. The intention behind action is what matters.",
-  "Confidence and hard work is the best medicine to kill the disease called failure. It will make you a successful person.",
-
   "The pleasure from the senses seems like nectar at first, but it is bitter as poison in the end.",
-  "If you want to see the brave, look at those who can forgive.",
-  "If you don't fight for what you want, don't cry for what you lost.",
-  "The world's most powerful warrior is patience and time.",
   "One who has control over the mind is tranquil in heat and cold, in pleasure and pain, and in honor and dishonor.",
-  "I have a purpose for your pain, a reason for your struggle, and a reward for your faithfulness. Trust me and don't give up.",
   "I am the source of all spiritual and material worlds. Everything emanates from Me.",
-  "The mind is everything. What you think, you become.",
   "A disciplined mind brings happiness.",
   "The ignorant work for their own profit; the wise work for the welfare of the world, without thought for themselves.",
   "Fear not. What is not real, never was and never will be. What is real, always was and cannot be destroyed.",
@@ -197,15 +183,12 @@ const KRISHNA_QUOTES = [
   "Those who meditate on me and worship me with an unwavering mind, to them I carry what they lack and preserve what they have.",
   "The offering of wisdom is better than any material offering.",
   "Works do not cling to me because I am not attached to their results. Those who understand this and practice it live in freedom.",
-  "The same stream of life that runs through my veins night and day runs through the world and dances in rhythmic measures.",
   "The wise should not unsettle the mind of the ignorant who is attached to the fruits of work.",
   "I am seated in everyone's heart.",
   "As a mirror is obscured by dust, so the intellect is obscured by anger.",
   "I am the supreme goal of the learned. I am the supreme path.",
   "Beholding the Supreme Being in all beings, the wise should extend the quality of love and friendship to all.",
-  "Just as a man casts off his worn-out clothes and takes on other new ones, so does the embodied soul cast off his worn-out bodies and enters into others that are new.",
   "The intellect of those who are attached to worldly pleasures and wealth is not steady.",
-  "You came empty-handed, and you will leave empty-handed.",
   "I am the consciousness in all beings.",
   "Strive for the welfare of others, for this is the highest duty of a righteous person.",
   "I am everlasting and I am the maintainer.",
@@ -217,10 +200,10 @@ const KRISHNA_QUOTES = [
   "I am the heat of the fire, and I am the life of all that lives.",
   "The faith of each is in accordance with his nature.",
   "The embodied soul is eternal in existence, indestructible, and infinite.",
-  "He who is contented with what comes to him without effort, who is free from the dualities and from envy, and who is steady in both success and failure, is never entangled, although performing actions.",
+  "He who is contented with what comes to him without effort, who is free from the dualities and from envy, and who is steady in both success and failure, is never entangled, although performing actions."
 ];
 
-const STORAGE_KEY = "qr_shown_questions_v1";
+const STORAGE_KEY = "krishna_puzzle_shown_questions_v5_gk";
 
 export default function QuestionPage({ useNoRepeat = true }) {
   const [current, setCurrent] = useState(null);
@@ -229,41 +212,50 @@ export default function QuestionPage({ useNoRepeat = true }) {
   const [quote, setQuote] = useState("");
   const [showHint, setShowHint] = useState(false);
 
-  useEffect(() => {
-    const pickRandom = () => {
-      let pool = QUESTION_BANK.map((q) => q.id);
+  const getNewQuestion = useCallback(() => {
+    let pool = QUESTION_BANK.map((q) => q.id);
 
-      if (useNoRepeat && typeof localStorage !== "undefined") {
-        try {
-          const shownRaw = localStorage.getItem(STORAGE_KEY);
-          const shown = shownRaw ? JSON.parse(shownRaw) : [];
-          pool = pool.filter((id) => !shown.includes(id));
-          if (pool.length === 0) {
-            localStorage.removeItem(STORAGE_KEY);
-            pool = QUESTION_BANK.map((q) => q.id);
-          }
-        } catch (e) {
-          console.warn("Error reading shown list:", e);
+    if (useNoRepeat && typeof localStorage !== "undefined") {
+      try {
+        const shownRaw = localStorage.getItem(STORAGE_KEY);
+        const shown = shownRaw ? JSON.parse(shownRaw) : [];
+        const filteredPool = pool.filter((id) => !shown.includes(id));
+        
+        if (filteredPool.length === 0) {
+          // All questions have been shown, reset the list
+          localStorage.removeItem(STORAGE_KEY);
+        } else {
+          pool = filteredPool;
         }
+      } catch (e) {
+        console.warn("Error reading shown list:", e);
       }
+    }
 
-      const id = pool[Math.floor(Math.random() * pool.length)];
-      const q = QUESTION_BANK.find((x) => x.id === id) || QUESTION_BANK[0];
+    const id = pool[Math.floor(Math.random() * pool.length)];
+    const q = QUESTION_BANK.find((x) => x.id === id) || QUESTION_BANK[0];
 
-      if (useNoRepeat && typeof localStorage !== "undefined") {
-        try {
-          const shownRaw = localStorage.getItem(STORAGE_KEY);
-          const shown = shownRaw ? JSON.parse(shownRaw) : [];
-          shown.push(q.id);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(shown));
-        } catch {}
-      }
+    if (useNoRepeat && typeof localStorage !== "undefined") {
+      try {
+        const shownRaw = localStorage.getItem(STORAGE_KEY);
+        const shown = shownRaw ? JSON.parse(shownRaw) : [];
+        if (!shown.includes(q.id)) {
+            shown.push(q.id);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(shown));
+        }
+      } catch {}
+    }
 
-      setCurrent(q);
-    };
-
-    pickRandom();
+    setCurrent(q);
+    setAnswer("");
+    setSolved(false);
+    setShowHint(false);
+    setQuote("");
   }, [useNoRepeat]);
+
+  useEffect(() => {
+    getNewQuestion();
+  }, [getNewQuestion]);
 
   const checkAnswer = () => {
     if (!current) return;
@@ -274,8 +266,6 @@ export default function QuestionPage({ useNoRepeat = true }) {
       alert("Incorrect — please try again.");
     }
   };
-
-  const handleNew = () => window.location.reload();
 
   if (!current) {
     return (
@@ -307,15 +297,21 @@ export default function QuestionPage({ useNoRepeat = true }) {
               style={styles.input}
             />
 
-            <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+            <div style={{ display: "flex", gap: 8, marginTop: 10, justifyContent: 'center' }}>
               <button onClick={checkAnswer} style={styles.button}>
                 Submit
               </button>
               <button
                 onClick={() => setShowHint((s) => !s)}
-                style={{ ...styles.button, background: "#ddd", color: "#111" }}
+                style={{ ...styles.button, background: "#e2e8f0", color: "#2d3748" }}
               >
                 {showHint ? "Hide Hint" : "Show Hint"}
+              </button>
+              <button
+                onClick={getNewQuestion}
+                style={{ ...styles.button, background: "#f6ad55", color: "#2d3748" }}
+              >
+                Skip
               </button>
             </div>
 
@@ -335,7 +331,7 @@ export default function QuestionPage({ useNoRepeat = true }) {
             <blockquote style={{ marginTop: 10, fontStyle: "italic" }}>“{quote}”</blockquote>
 
             <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-              <button onClick={handleNew} style={styles.button}>
+              <button onClick={getNewQuestion} style={styles.button}>
                 New Question
               </button>
               <button
