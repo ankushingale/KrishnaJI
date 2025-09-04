@@ -321,7 +321,7 @@ const styles = {
     textAlign: "center",
   },
   input: {
-    width: "100%",
+    width: "90%",
     padding: "10px 12px",
     borderRadius: 6,
     border: "1px solid #ddd",
