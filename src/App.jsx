@@ -151,7 +151,7 @@ const KRISHNA_QUOTES = [
   "He who is contented with what comes to him without effort, who is free from the dualities and from envy, and who is steady in both success and failure, is never entangled, although performing actions."
 ];
 
-const STORAGE_KEY = "krishna_puzzle_shown_questions_v5_gk";
+const STORAGE_KEY = "krishna_puzzle_shown_questions_v6_mixed";
 
 export default function QuestionPage({ useNoRepeat = true }) {
   const [current, setCurrent] = useState(null);
@@ -170,7 +170,6 @@ export default function QuestionPage({ useNoRepeat = true }) {
         const filteredPool = pool.filter((id) => !shown.includes(id));
         
         if (filteredPool.length === 0) {
-          // All questions have been shown, reset the list
           localStorage.removeItem(STORAGE_KEY);
         } else {
           pool = filteredPool;
@@ -230,10 +229,10 @@ export default function QuestionPage({ useNoRepeat = true }) {
       <div style={styles.card}>
         {!solved ? (
           <>
-            <p style={{ fontSize: 18, fontWeight: 600, marginBottom: 6 }}>
+            <p style={{ fontSize: 22, fontWeight: 600, marginBottom: 8, lineHeight: 1.4 }}>
               {current.question || "No question available"}
             </p>
-            <div style={{ fontSize: 12, color: "#666", marginBottom: 12 }}>
+            <div style={{ fontSize: 12, color: "#a0aec0", marginBottom: 20 }}>
               Question ID: {current.id}
             </div>
 
@@ -245,40 +244,40 @@ export default function QuestionPage({ useNoRepeat = true }) {
               style={styles.input}
             />
 
-            <div style={{ display: "flex", gap: 8, marginTop: 10, justifyContent: 'center' }}>
+            <div style={{ display: "flex", gap: 8, marginTop: 16, justifyContent: 'center' }}>
               <button onClick={checkAnswer} style={styles.button}>
                 Submit
               </button>
               <button
                 onClick={() => setShowHint((s) => !s)}
-                style={{ ...styles.button, background: "#e2e8f0", color: "#2d3748" }}
+                style={{ ...styles.button, background: "#4a5568", color: "#e2e8f0" }}
               >
                 {showHint ? "Hide Hint" : "Show Hint"}
               </button>
               <button
                 onClick={getNewQuestion}
-                style={{ ...styles.button, background: "#f6ad55", color: "#2d3748" }}
+                style={{ ...styles.button, background: "#dd6b20", color: "#fff" }}
               >
                 Skip
               </button>
             </div>
 
             {showHint && (
-              <div style={{ marginTop: 12, color: "#444" }}>
-                Hint: {current.hint || "—"}
+              <div style={{ marginTop: 20, color: "#cbd5e0", background: '#2d3748', padding: '10px', borderRadius: '6px' }}>
+                <strong>Hint:</strong> {current.hint || "—"}
               </div>
             )}
-            <div style={{ marginTop: 16, fontSize: 12, color: "#999" }}>
-              Tip: QR generator params are ignored — page still picks a fresh question.
-            </div>
+           
           </>
         ) : (
           <>
-            <div style={{ fontSize: 40 }}>🎉</div>
-            <h2 style={{ marginTop: 8 }}>Correct!</h2>
-            <blockquote style={{ marginTop: 10, fontStyle: "italic" }}>“{quote}”</blockquote>
+            <div style={{ fontSize: 48 }}>🎉</div>
+            <h2 style={{ marginTop: 8, fontSize: 28, color: '#fff' }}>Correct!</h2>
+            <blockquote style={{ margin: '20px auto', padding: '15px', fontStyle: "italic", background: '#2d3748', borderRadius: '8px', borderLeft: '4px solid #f6ad55', maxWidth: '90%' }}>
+              <p style={{fontSize: 18, color: '#e2e8f0'}}>“{quote}”</p>
+            </blockquote>
 
-            <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+            <div style={{ display: "flex", gap: 12, marginTop: 24, justifyContent: 'center' }}>
               <button onClick={getNewQuestion} style={styles.button}>
                 New Question
               </button>
@@ -291,7 +290,7 @@ export default function QuestionPage({ useNoRepeat = true }) {
                     alert("Quote copied to clipboard.");
                   }
                 }}
-                style={{ ...styles.button, background: "#2b6cb0", color: "#fff" }}
+                style={{ ...styles.button, background: "#3182ce", color: "#fff" }}
               >
                 Share / Copy
               </button>
@@ -309,30 +308,42 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    background: "#f7fafc",
+    background: "#1a202c",
     padding: 20,
+    fontFamily: 'sans-serif',
   },
   card: {
-    width: "min(720px, 96%)",
-    background: "#000000ff",
-    padding: 24,
-    borderRadius: 10,
-    boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
+    width: "min(600px, 95%)",
+    background: "#2d3748",
+    color: "#e2e8f0",
+    padding: '32px',
+    borderRadius: 16,
+    boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
     textAlign: "center",
   },
   input: {
-    width: "90%",
-    padding: "10px 12px",
-    borderRadius: 6,
-    border: "1px solid #ddd",
+    width: "100%",
+    padding: "12px 16px",
+    borderRadius: 8,
+    border: "2px solid #4a5568",
+    background: '#1a202c',
+    color: '#e2e8f0',
     fontSize: 16,
+    textAlign: "center",
+    boxSizing: 'border-box',
+    outline: 'none',
+    transition: 'border-color 0.2s',
   },
   button: {
-    padding: "10px 16px",
-    borderRadius: 6,
+    padding: "12px 20px",
+    borderRadius: 8,
     border: "none",
-    background: "#48bb78",
+    background: "#38a169",
     color: "#fff",
     cursor: "pointer",
+    fontWeight: 'bold',
+    fontSize: '15px',
+    transition: 'transform 0.1s',
   },
 };
+
