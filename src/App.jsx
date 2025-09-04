@@ -62,6 +62,19 @@ const QUESTION_BANK = [
   { id: "T8", question: "Which company developed the Android operating system?", answer: "Google", hint: "A major competitor to Apple's iOS." },
   { id: "T9", question: "In programming, what is a 'bug'?", answer: "An error", hint: "Something that causes a program to behave unexpectedly." },
   { id: "T10", question: "What service is commonly used to send electronic mail?", answer: "Email", hint: "Short for electronic mail." },
+
+    // Mahabharata
+  { id: "M1", question: "Who was the teacher of both the Pandavas and Kauravas?", answer: "Dronacharya", hint: "An expert in military arts." },
+  { id: "M2", question: "What was the name of the kingdom ruled by the Pandavas?", answer: "Indraprastha", hint: "A magnificent city." },
+  { id: "M3", question: "Who was the wife of the five Pandava brothers?", answer: "Draupadi", hint: "Born from a sacred fire." },
+  { id: "M4", question: "Who was the blind king of Hastinapura?", answer: "Dhritarashtra", hint: "Father of the Kauravas." },
+  { id: "M5", question: "The Bhagavad Gita is a dialogue between Krishna and whom?", answer: "Arjuna", hint: "A Pandava prince and skilled archer." },
+  { id: "M6", question: "Who was the eldest of the Kaurava brothers?", answer: "Duryodhana", hint: "Known for his pride and envy." },
+  { id: "M7", question: "Who was the mother of Karna?", answer: "Kunti", hint: "She was also the mother of three Pandavas." },
+  { id: "M8", question: "Which Pandava was known for his immense strength?", answer: "Bhima", hint: "He was the son of the wind god, Vayu." },
+  { id: "M9", question: "Who is considered the author of the Mahabharata epic?", answer: "Vyasa", hint: "A revered sage." },
+  { id: "M10", question: "What was the name of Bhishma's father?", answer: "Shantanu", hint: "A king of the Kuru dynasty." },
+
 ];
 
 const KRISHNA_QUOTES = [
